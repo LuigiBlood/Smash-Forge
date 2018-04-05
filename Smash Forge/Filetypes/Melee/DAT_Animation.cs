@@ -185,6 +185,62 @@ namespace Smash_Forge
             }
         }
 
+        public void ReadKARAnim(FileData d, string name)
+        {
+            this.Name = name;
+
+            //figtree data from here
+            d.skip(8);
+            float frameCount = d.readFloat();
+            int keyOffset = d.readInt();
+            int animDataOffset = d.readInt();
+
+            if (Debug)
+                Console.WriteLine(name + "\tCount: " + frameCount);
+            this.frameCount = (int)frameCount;
+
+            int temp = d.pos();
+
+            d.seek(keyOffset);
+            //int boneCount = 0x2E; // TODO: Use actual bone count 0x35
+            List<int> keyFrameCount = new List<int>();
+            int bid = d.readByte();
+            while (bid != 0xFF)
+            {
+                keyFrameCount.Add(bid);
+                bid = d.readByte();
+                nodes.Add(new List<DATAnimTrack>());
+            }
+            int boneCount = keyFrameCount.Count;
+            if (Debug)
+                Console.WriteLine(boneCount);
+
+            d.seek(animDataOffset);
+            for (int i = 0; i < boneCount; i++)
+            { // bonecount
+
+                if (Debug)
+                    Console.WriteLine("Bone " + i + ": " + keyFrameCount[i] + "\t" + d.pos().ToString("x"));
+
+                for (int j = 0; j < keyFrameCount[i]; j++)
+                {
+                    int length = d.readShort();
+                    d.skip(2);
+                    int trackType = d.readByte();
+                    int valueFormat = d.readByte();
+                    int tanFormat = d.readByte();
+                    d.skip(1);
+                    int dataoff = d.readInt();
+
+                    if (Debug)
+                        Console.WriteLine((AnimType)trackType + "\tLength: " + length + "\tOffset: " + dataoff.ToString("x") + " " + valueFormat.ToString("x") + " " + tanFormat.ToString("x"));
+                    // System.out.println(valueFormat + " " + tanFormat);
+                    readKeyFrame(d, length, dataoff, valueFormat, tanFormat, keyFrameCount[i], i, trackType);
+                }
+
+            }
+        }
+
         /*public void readStageAnim()
         {
             FileData d = new FileData("C:\\Users\\ploaj_000\\Desktop\\Melee\\GrIz.dat");

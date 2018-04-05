@@ -1142,6 +1142,16 @@ namespace Smash_Forge
                 mvp = new ModelViewport();
                 mvp.draw.Add(new ModelContainer() { DAT_MELEE = dat });
                 mvp.Text = fileName;
+
+                if (dat.Anims.Count != 0)
+                {
+                    foreach (string key in dat.Anims.Keys)
+                    {
+                        dat.Anims[key].Text = key;
+                        mvp.AnimList.treeView1.Nodes.Add(dat.Anims[key]);
+                    }
+                }
+
                 AddDockedControl(mvp);
             }
 

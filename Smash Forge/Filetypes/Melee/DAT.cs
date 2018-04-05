@@ -58,6 +58,7 @@ namespace Smash_Forge
         Dictionary<int, JOBJ> jobjOffsetLinker = new Dictionary<int, JOBJ>();
         public Dictionary<int, Bitmap> texturesLinker = new Dictionary<int, Bitmap>();
         public Dictionary<int, object[]> tobjLinker = new Dictionary<int, object[]>();
+        public Dictionary<string, Animation> Anims = new Dictionary<string, Animation>();
 
 
         public DAT()
@@ -254,6 +255,38 @@ namespace Smash_Forge
             }
 
             PreRender();
+
+            foreach (TreeNode node in tree)
+            {
+                // then a file system is read... it works like a tree?
+                d.seek((int)node.Tag);
+                // now, the name determines what happens here
+                // for now, it just assumes the _joint
+                if (node.Text.StartsWith("vcDataStar"))
+                {
+                    //Load Animations
+                    d.seek((int)node.Tag + 0x18);
+                    int anim_struct = d.readInt();
+
+                    DAT_Animation anim;
+                    AnimTrack track;
+                    int temp;
+
+                    for (int i = 0; i < 6; i++)
+                    {
+                        d.seek(anim_struct + (8 * i));
+                        temp = d.readInt();
+                        if (temp != 0)
+                        {
+                            d.seek(temp);
+                            anim = new DAT_Animation();
+                            anim.ReadKARAnim(d, "Animation " + i);
+                            track = new AnimTrack(anim);
+                            Anims.Add(anim.Name, track.toAnimation(this.bones));
+                        }
+                    }
+                }
+            }
         }
 
         Dictionary<int, PrimitiveType> primitiveTypes = new Dictionary<int, PrimitiveType>()
