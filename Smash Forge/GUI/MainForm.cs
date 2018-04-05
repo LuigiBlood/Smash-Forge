@@ -1454,13 +1454,14 @@ namespace Smash_Forge
             using (var ofd = new OpenFileDialog())
             {
                 ofd.Filter =
-                    "Supported Formats|*.vbn;*.lvd;*.nud;*.xmb;*.bin;*.dae;*.obj;*.wrkspc;*.nut;*.sb;*.tex;*.smd;*.mta;*.pac;*.xmb;*.bch;*.mbn;*.mdl0|" +
+                    "Supported Formats|*.vbn;*.lvd;*.nud;*.xmb;*.bin;*.dae;*.obj;*.wrkspc;*.nut;*.sb;*.tex;*.smd;*.mta;*.pac;*.xmb;*.bch;*.mbn;*.mdl0;*.dat|" +
                     "Smash 4 Boneset (.vbn)|*.vbn|" +
                     "Namco Model (.nud)|*.nud|" +
                     "Smash 4 Level Data (.lvd)|*.lvd|" +
                     "NW4R Model (.mdl0)|*.mdl0|" +
                     "Source Model (.SMD)|*.smd|" +
                     "Smash 4 Parameters (.bin)|*.bin|" +
+                    "HAL SysDolphin Data (.dat)|*.dat|" +
                     "Collada Model Format (.dae)|*.dae|" +
                     "Wavefront Object (.obj)|*.obj|" +
                              "Object Motion|*.omo|" +
