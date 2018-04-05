@@ -167,6 +167,52 @@ namespace Smash_Forge
                     collisions = new COLL_DATA();
                     collisions.Read(d);
                 }
+                else if (node.Text.StartsWith("vcDataStar"))
+                {
+                    //Model Attributes
+                    TreeNode node_modeldata = new TreeNode();
+                    node_modeldata.Text = "Model Attributes";
+                    d.seek((int)node.Tag + 4);
+                    node_modeldata.Tag = d.readInt();
+
+                    //--JObj
+                    TreeNode node_JOBJ = new TreeNode();
+                    node_JOBJ.Text = "JObj";
+                    d.seek((int)node_modeldata.Tag);
+                    int data = d.readInt();
+                    node_JOBJ.Tag = data;
+                    Console.WriteLine("JOBJ Offset KAR - " + data.ToString("X"));
+
+                    JOBJ j = new JOBJ();
+                    d.seek(data);
+                    j.Read(d, this, node_JOBJ);
+
+                    node_modeldata.Nodes.Add(node_JOBJ);
+                    node.Nodes.Add(node_modeldata);
+                }
+                else if (node.Text.StartsWith("grModel") && !node.Text.StartsWith("grModelMotion"))
+                {
+                    //Model Attributes
+                    TreeNode node_modeldata = new TreeNode();
+                    node_modeldata.Text = "Model Attributes";
+                    d.seek((int)node.Tag);
+                    node_modeldata.Tag = d.readInt();
+
+                    //--JObj
+                    TreeNode node_JOBJ = new TreeNode();
+                    node_JOBJ.Text = "JObj";
+                    d.seek((int)node_modeldata.Tag);
+                    int data = d.readInt();
+                    node_JOBJ.Tag = data;
+                    Console.WriteLine("JOBJ Offset KAR - " + data.ToString("X"));
+
+                    JOBJ j = new JOBJ();
+                    d.seek(data);
+                    j.Read(d, this, node_JOBJ);
+
+                    node_modeldata.Nodes.Add(node_JOBJ);
+                    node.Nodes.Add(node_modeldata);
+                }
             }
 
             Console.WriteLine("Done");
