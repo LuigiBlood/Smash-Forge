@@ -168,7 +168,7 @@ namespace Smash_Forge
                     collisions = new COLL_DATA();
                     collisions.Read(d);
                 }
-                else if (node.Text.StartsWith("vcDataStar"))
+                else if (node.Text.StartsWith("vcDataStar") || node.Text.StartsWith("vcDataWheel"))
                 {
                     //Model Attributes
                     TreeNode node_modeldata = new TreeNode();
@@ -176,19 +176,34 @@ namespace Smash_Forge
                     d.seek((int)node.Tag + 4);
                     node_modeldata.Tag = d.readInt();
 
-                    //--JObj
+                    //--JObj (Main Model)
                     TreeNode node_JOBJ = new TreeNode();
-                    node_JOBJ.Text = "JObj";
+                    node_JOBJ.Text = "Main Model Joint";
                     d.seek((int)node_modeldata.Tag);
                     int data = d.readInt();
                     node_JOBJ.Tag = data;
-                    Console.WriteLine("JOBJ Offset KAR - " + data.ToString("X"));
+                    Console.WriteLine("JOBJ Offset KAR (Main) - " + ((int)node_modeldata.Tag).ToString("X") + " : " + data.ToString("X"));
 
                     JOBJ j = new JOBJ();
                     d.seek(data);
                     j.Read(d, this, node_JOBJ);
 
                     node_modeldata.Nodes.Add(node_JOBJ);
+
+                    //--JObj (Shadow Model)
+                    TreeNode node_JOBJs = new TreeNode();
+                    node_JOBJs.Text = "Shadow Model Joint";
+                    d.seek((int)node_modeldata.Tag);
+                    data = d.readInt();
+                    node_JOBJs.Tag = data;
+                    Console.WriteLine("JOBJ Offset KAR (Shadow) - " + ((int)node_modeldata.Tag).ToString("X") + " : " + data.ToString("X"));
+
+                    j = new JOBJ();
+                    d.seek(data);
+                    j.Read(d, this, node_JOBJs);
+
+                    node_modeldata.Nodes.Add(node_JOBJs);
+
                     node.Nodes.Add(node_modeldata);
                 }
                 else if (node.Text.StartsWith("grModel") && !node.Text.StartsWith("grModelMotion"))
@@ -205,7 +220,109 @@ namespace Smash_Forge
                     d.seek((int)node_modeldata.Tag);
                     int data = d.readInt();
                     node_JOBJ.Tag = data;
-                    Console.WriteLine("JOBJ Offset KAR - " + data.ToString("X"));
+                    Console.WriteLine("JOBJ Offset KAR - " + ((int)node_modeldata.Tag).ToString("X") + " : " + data.ToString("X"));
+
+                    JOBJ j = new JOBJ();
+                    d.seek(data);
+                    j.Read(d, this, node_JOBJ);
+
+                    node_modeldata.Nodes.Add(node_JOBJ);
+                    node.Nodes.Add(node_modeldata);
+                }
+                else if (node.Text.StartsWith("grData"))
+                {
+                    //Model Attributes
+                    TreeNode node_modeldata = new TreeNode();
+                    node_modeldata.Text = "Spawn Points";
+                    d.seek((int)node.Tag + 0x20);
+                    node_modeldata.Tag = d.readInt();
+
+                    //--JObj
+                    TreeNode node_JOBJ = new TreeNode();
+                    node_JOBJ.Text = "JObj";
+                    d.seek((int)node_modeldata.Tag);
+                    int data = d.readInt();
+                    node_JOBJ.Tag = data;
+                    Console.WriteLine("JOBJ Offset KAR - " + ((int)node_modeldata.Tag).ToString("X") + " : " + data.ToString("X"));
+
+                    JOBJ j = new JOBJ();
+                    d.seek(data);
+                    j.Read(d, this, node_JOBJ);
+
+                    node_modeldata.Nodes.Add(node_JOBJ);
+                    node.Nodes.Add(node_modeldata);
+                }
+                else if (node.Text.StartsWith("rdData") && !node.Text.StartsWith("rdDataCommon") && !node.Text.StartsWith("rdDataKirbyAbility"))
+                {
+                    //Model Attributes
+                    TreeNode node_modeldata = new TreeNode();
+                    node_modeldata.Text = "Model Attributes";
+                    d.seek((int)node.Tag + 4);
+                    node_modeldata.Tag = d.readInt();
+
+                    //--JObj
+                    TreeNode node_JOBJ = new TreeNode();
+                    node_JOBJ.Text = "JObj";
+                    d.seek((int)node_modeldata.Tag);
+                    int data = d.readInt();
+                    node_JOBJ.Tag = data;
+                    Console.WriteLine("JOBJ Offset KAR - " + ((int)node_modeldata.Tag).ToString("X") + " : " + data.ToString("X"));
+
+                    JOBJ j = new JOBJ();
+                    d.seek(data);
+                    j.Read(d, this, node_JOBJ);
+
+                    node_modeldata.Nodes.Add(node_JOBJ);
+                    node.Nodes.Add(node_modeldata);
+                }
+                else if (node.Text.StartsWith("rdDataKirbyAbility"))
+                {
+                    //Model Attributes
+                    TreeNode node_modeldata1 = new TreeNode();
+                    node_modeldata1.Text = "Model Attributes";
+                    d.seek((int)node.Tag + 0x24);
+                    node_modeldata1.Tag = d.readInt();
+
+                    TreeNode node_modeldata = new TreeNode();
+                    node_modeldata.Text = "Model Attributes";
+                    d.seek((int)node_modeldata1.Tag + 0x4);     //To be changed for other models
+                    node_modeldata.Tag = d.readInt();
+
+                    //--JObj
+                    TreeNode node_JOBJ = new TreeNode();
+                    node_JOBJ.Text = "JObj";
+                    d.seek((int)node_modeldata.Tag);
+                    int data = d.readInt();
+                    node_JOBJ.Tag = data;
+                    Console.WriteLine("JOBJ Offset KAR - " + ((int)node_modeldata.Tag).ToString("X") + " : " + data.ToString("X"));
+
+                    JOBJ j = new JOBJ();
+                    d.seek(data);
+                    j.Read(d, this, node_JOBJ);
+
+                    node_modeldata.Nodes.Add(node_JOBJ);
+                    node.Nodes.Add(node_modeldata);
+                }
+                else if (node.Text.StartsWith("em") && node.Text.EndsWith("DataGroup"))
+                {
+                    //Model Attributes
+                    TreeNode node_modeldata1 = new TreeNode();
+                    node_modeldata1.Text = "Model Attributes";
+                    d.seek((int)node.Tag);
+                    node_modeldata1.Tag = d.readInt();
+
+                    TreeNode node_modeldata = new TreeNode();
+                    node_modeldata.Text = "Model Attributes";
+                    d.seek((int)node_modeldata1.Tag + 0x8);
+                    node_modeldata.Tag = d.readInt();
+
+                    //--JObj
+                    TreeNode node_JOBJ = new TreeNode();
+                    node_JOBJ.Text = "JObj";
+                    d.seek((int)node_modeldata.Tag);
+                    int data = d.readInt();
+                    node_JOBJ.Tag = data;
+                    Console.WriteLine("JOBJ Offset KAR - " + ((int)node_modeldata.Tag).ToString("X") + " : " + data.ToString("X"));
 
                     JOBJ j = new JOBJ();
                     d.seek(data);
@@ -262,7 +379,7 @@ namespace Smash_Forge
                 d.seek((int)node.Tag);
                 // now, the name determines what happens here
                 // for now, it just assumes the _joint
-                if (node.Text.StartsWith("vcDataStar"))
+                if (node.Text.StartsWith("vcDataStar") || node.Text.StartsWith("vcDataWheel"))
                 {
                     //Load Animations
                     d.seek((int)node.Tag + 0x18);
@@ -271,8 +388,11 @@ namespace Smash_Forge
                     DAT_Animation anim;
                     AnimTrack track;
                     int temp;
+                    int max = 4;
+                    if (node.Text.StartsWith("vcDataStar"))
+                        max = 6;
 
-                    for (int i = 0; i < 6; i++)
+                    for (int i = 0; i < max; i++)
                     {
                         d.seek(anim_struct + (8 * i));
                         temp = d.readInt();
