@@ -396,7 +396,7 @@ namespace Smash_Forge
                     {
                         d.seek(anim_struct + (8 * i));
                         temp = d.readInt();
-                        if (temp != 0)
+                        if (temp > 0)
                         {
                             d.seek(temp);
                             anim = new DAT_Animation();
